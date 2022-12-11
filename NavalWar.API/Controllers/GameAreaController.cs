@@ -1,4 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NavalWar.DTO;
+using NavalWar.DTO.Area;
+using NavalWar.DTO.WebDTO;
+using NavalWar.Utils;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,11 +12,24 @@ namespace NavalWar.API.Controllers
     [ApiController]
     public class GameAreaController : ControllerBase
     {
+        private GameArea _area = new GameArea();
+
         // GET: api/<GameAreaController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IActionResult GetPlayerBoards()
         {
-            return new string[] { "value1", "value2" };
+            _area.AddPLayer();
+            List<PlayerDTO> dto = new List<PlayerDTO>();
+            foreach (var player in _area.Players)
+            {
+                dto.Add(new PlayerDTO
+                {
+                    ShipBoard = player.GetPersonalBoard.ToListArray(),
+                    ShotBoard = player.GetShotsBoard.ToListArray()
+                });
+            }
+
+            return Ok(dto);
         }
 
         // GET api/<GameAreaController>/5
